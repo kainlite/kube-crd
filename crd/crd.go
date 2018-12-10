@@ -29,10 +29,10 @@ import (
 )
 
 const (
-	CRDPlural      string = "examples"
-	CRDGroup       string = "myorg.io"
-	CRDVersion     string = "v1"
-	FullCRDName    string = CRDPlural + "." + CRDGroup
+	CRDPlural   string = "containertrackers"
+	CRDGroup    string = "myorg.io"
+	CRDVersion  string = "v1"
+	FullCRDName string = CRDPlural + "." + CRDGroup
 )
 
 // Create the CRD resource, ignore error if it already exists
@@ -43,9 +43,9 @@ func CreateCRD(clientset apiextcs.Interface) error {
 			Group:   CRDGroup,
 			Version: CRDVersion,
 			Scope:   apiextv1beta1.NamespaceScoped,
-			Names:   apiextv1beta1.CustomResourceDefinitionNames{
+			Names: apiextv1beta1.CustomResourceDefinitionNames{
 				Plural: CRDPlural,
-				Kind:   reflect.TypeOf(Example{}).Name(),
+				Kind:   reflect.TypeOf(ContainerTracker{}).Name(),
 			},
 		},
 	}
@@ -59,28 +59,29 @@ func CreateCRD(clientset apiextcs.Interface) error {
 	// Note the original apiextensions example adds logic to wait for creation and exception handling
 }
 
-// Definition of our CRD Example class
-type Example struct {
+// Definition of our CRD ContainerTracker class
+type ContainerTracker struct {
 	meta_v1.TypeMeta   `json:",inline"`
 	meta_v1.ObjectMeta `json:"metadata"`
-	Spec               ExampleSpec   `json:"spec"`
-	Status             ExampleStatus `json:"status,omitempty"`
+	Spec               ContainerTrackerSpec   `json:"spec"`
+	Status             ContainerTrackerStatus `json:"status,omitempty"`
 }
-type ExampleSpec struct {
-	Foo string `json:"foo"`
-	Bar bool   `json:"bar"`
-	Baz int    `json:"baz,omitempty"`
+type ContainerTrackerSpec struct {
+	Name          string `json:"name"`
+	Owner         bool   `json:"owner"`
+	PreviousOwner int    `json:"previousowner"`
+	IssuedOn      int    `json:"issuedon"`
 }
 
-type ExampleStatus struct {
+type ContainerTrackerStatus struct {
 	State   string `json:"state,omitempty"`
 	Message string `json:"message,omitempty"`
 }
 
-type ExampleList struct {
+type ContainerTrackerList struct {
 	meta_v1.TypeMeta `json:",inline"`
 	meta_v1.ListMeta `json:"metadata"`
-	Items            []Example `json:"items"`
+	Items            []ContainerTracker `json:"items"`
 }
 
 // Create a  Rest client with the new CRD Schema
@@ -88,8 +89,8 @@ var SchemeGroupVersion = schema.GroupVersion{Group: CRDGroup, Version: CRDVersio
 
 func addKnownTypes(scheme *runtime.Scheme) error {
 	scheme.AddKnownTypes(SchemeGroupVersion,
-		&Example{},
-		&ExampleList{},
+		&ContainerTracker{},
+		&ContainerTrackerList{},
 	)
 	meta_v1.AddToGroupVersion(scheme, SchemeGroupVersion)
 	return nil

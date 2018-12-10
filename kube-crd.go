@@ -22,13 +22,14 @@ import (
 	"github.com/yaronha/kube-crd/client"
 	"github.com/yaronha/kube-crd/crd"
 
+	"flag"
+
 	apiextcs "k8s.io/apiextensions-apiserver/pkg/client/clientset/clientset"
 	apierrors "k8s.io/apimachinery/pkg/api/errors"
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/tools/clientcmd"
-	"flag"
 )
 
 // return rest config, if path not specified assume in cluster config
@@ -73,17 +74,19 @@ func main() {
 	// Create a CRD client interface
 	crdclient := client.CrdClient(crdcs, scheme, "default")
 
-	// Create a new Example object and write to k8s
-	example := &crd.Example{
+	// Create a new ContainerTracker object and write to k8s
+	example := &crd.ContainerTracker{
 		ObjectMeta: meta_v1.ObjectMeta{
 			Name:   "example123",
 			Labels: map[string]string{"mylabel": "test"},
 		},
-		Spec: crd.ExampleSpec{
-			Foo: "example-text",
-			Bar: true,
+		Spec: crd.ContainerTrackerSpec{
+			Name:          "example-text",
+			Owner:         "example",
+			PreviousOwner: "example",
+			IssuedOn:      Time.now(),
 		},
-		Status: crd.ExampleStatus{
+		Status: crd.ContainerTrackerStatus{
 			State:   "created",
 			Message: "Created, not processed yet",
 		},
@@ -98,18 +101,18 @@ func main() {
 		panic(err)
 	}
 
-	// List all Example objects
+	// List all ContainerTracker objects
 	items, err := crdclient.List(meta_v1.ListOptions{})
 	if err != nil {
 		panic(err)
 	}
 	fmt.Printf("List:\n%s\n", items)
 
-	// Example Controller
-	// Watch for changes in Example objects and fire Add, Delete, Update callbacks
+	// ContainerTracker Controller
+	// Watch for changes in ContainerTracker objects and fire Add, Delete, Update callbacks
 	_, controller := cache.NewInformer(
 		crdclient.NewListWatch(),
-		&crd.Example{},
+		&crd.ContainerTracker{},
 		time.Minute*10,
 		cache.ResourceEventHandlerFuncs{
 			AddFunc: func(obj interface{}) {
