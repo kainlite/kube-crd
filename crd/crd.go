@@ -89,9 +89,7 @@ type ContainerTrackerList struct {
 func (in *ContainerTracker) DeepCopyInto(out *ContainerTracker) {
 	out.TypeMeta = in.TypeMeta
 	out.ObjectMeta = in.ObjectMeta
-	out.Spec = ContainerTrackerSpec{
-		Replicas: in.Spec.Replicas,
-	}
+	out.Spec = ContainerTrackerSpec{}
 }
 
 // DeepCopyObject returns a generically typed copy of an object
