@@ -68,9 +68,9 @@ type ContainerTracker struct {
 }
 type ContainerTrackerSpec struct {
 	Name          string `json:"name"`
-	Owner         bool   `json:"owner"`
-	PreviousOwner int    `json:"previousowner"`
-	IssuedOn      int    `json:"issuedon"`
+	Owner         string `json:"owner"`
+	PreviousOwner string `json:"previousowner"`
+	IssuedOn      string `json:"issuedon"`
 }
 
 type ContainerTrackerStatus struct {
