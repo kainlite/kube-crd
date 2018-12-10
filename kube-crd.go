@@ -19,8 +19,8 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/yaronha/kube-crd/client"
-	"github.com/yaronha/kube-crd/crd"
+	"github.com/kainlite/kube-crd/client"
+	"github.com/kainlite/kube-crd/crd"
 
 	"flag"
 

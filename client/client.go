@@ -16,7 +16,7 @@ limitations under the License.
 package client
 
 import (
-	"github.com/yaronha/kube-crd/crd"
+	"github.com/kainlite/kube-crd/crd"
 
 	meta_v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/fields"
